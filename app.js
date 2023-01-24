@@ -4,6 +4,8 @@ const express = require("express");
 
 const app = express();
 
+const {hashPassword} = require("./auth.js");
+
 app.use(express.json());
 // a middleware to ensure that all routes are able to read a JSON formatted request body
 
@@ -30,8 +32,8 @@ const userHandlers = require("./userHandlers");
 
 app.get("/api/users", userHandlers.getUsers);
 app.get("/api/users/:id", userHandlers.getUserById);
-app.post("/api/users", validateUser, userHandlers.postUser);
-app.put("/api/users/:id", validateUser, userHandlers.updateUser);
+app.post("/api/users", validateUser, hashPassword, userHandlers.postUser);
+app.put("/api/users/:id", validateUser, hashPassword, userHandlers.updateUser);
 app.delete("/api/users/:id", userHandlers.deleteUser);
 
 app.listen(port, (err) => {
