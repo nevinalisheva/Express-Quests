@@ -50,7 +50,7 @@ const getUserById = (req, res) => {
       res.status(500).send("Error retrieving data from database");
     });
 };
-
+//post with "password" instead of "hashedPassword"
 const postUser = (req, res) => {
   const { firstname, lastname, email, city, language, hashedPassword } = req.body;
   database
