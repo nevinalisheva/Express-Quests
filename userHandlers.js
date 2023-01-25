@@ -50,6 +50,30 @@ const getUserById = (req, res) => {
       res.status(500).send("Error retrieving data from database");
     });
 };
+
+  const getUserByEmailWithPasswordAndPassToNext = (req, res, next) => {
+    const {email} = req.body;
+
+    database
+      .query(
+        "SELECT id, firstname, lastname, email, city, language, hashedPassword FROM users WHERE email = ?",
+        [email]
+      )
+      .then(([users]) => {
+        if (users[0] != null) {
+          req.user=(users[0]);
+          next();
+        } else {
+          res.status(401);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send("Error retrieving data from database");
+      });
+  }; 
+
+
 //post with "password" instead of "hashedPassword"
 const postUser = (req, res) => {
   const { firstname, lastname, email, city, language, hashedPassword } = req.body;
@@ -106,4 +130,11 @@ const deleteUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, getUsers, getUserById, postUser, updateUser, deleteUser };
+module.exports = {
+  getUsers,
+  getUserByEmailWithPasswordAndPassToNext,
+  getUserById,
+  postUser,
+  updateUser,
+  deleteUser,
+};
